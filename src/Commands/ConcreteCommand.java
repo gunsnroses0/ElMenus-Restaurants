@@ -27,7 +27,7 @@ public abstract class ConcreteCommand extends Command {
 						byte[] body) throws IOException {
 
 					AMQP.BasicProperties myProps = (AMQP.BasicProperties) parameters.get("properties");
-
+					
 					System.out.println("Incoming corrID " + properties.getReplyTo());
 					System.out.println("My corrID " + myProps.getReplyTo());
 
@@ -66,7 +66,6 @@ public abstract class ConcreteCommand extends Command {
 		} catch (IOException | TimeoutException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public abstract void handleApi(HashMap<String, Object> service_parameters);
@@ -75,7 +74,7 @@ public abstract class ConcreteCommand extends Command {
 		try {
 			AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(requestId)
 					.replyTo(RPC_QUEUE_NAME).build();
-			System.out.println(service);
+//			System.out.println(service);
 			System.out.println("Sending to db :" + message);
 			channel.basicPublish("", service + "-request", props, message.getBytes());
 		} catch (Exception e) {

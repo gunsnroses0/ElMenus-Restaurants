@@ -40,7 +40,6 @@ public class RetrieveRestaurant extends ConcreteCommand {
 		String response = Restaurant.getById(id);
 		System.out.println(response);
 		sendMessage("database", properties.getCorrelationId(), response);
-
 	}
 
 	@Override

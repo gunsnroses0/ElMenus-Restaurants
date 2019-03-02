@@ -34,10 +34,7 @@ public class CreateRestaurant extends ConcreteCommand {
 			name = params.get("name").toString();
 			hotline = params.get("hotline").toString();
 			delivery_time = params.get("delivery_time").toString();
-//			System.out.println(params.get("delivery_fees"));
 			delivery_fees = Integer.parseInt(params.get("delivery_fees").toString());
-//			System.out.println(delivery_fees);
-//			System.out.println(delivery_fees.getClass());
 			delivery_hours = params.get("delivery_hours").toString();
 			description = params.get("description").toString();
 		} catch (ParseException e) {
@@ -49,7 +46,6 @@ public class CreateRestaurant extends ConcreteCommand {
 		String response = Restaurant.Create(name, hotline, delivery_time, delivery_fees, delivery_hours, description);
 		System.out.print("Response ");
 		System.out.println(response);
-//	        String response = (String)props.get("body");
 		sendMessage("database", properties.getCorrelationId(), response);
 	}
 

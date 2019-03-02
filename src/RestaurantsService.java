@@ -1,6 +1,8 @@
 import Commands.Command;
 import Commands.CreateRestaurant;
+import Commands.DeleteRestaurant;
 import Commands.RetrieveRestaurant;
+import Commands.UpdateRestaurant;
 
 //import Commands.delete.DeleteMessage;
 //import Commands.get.GetMessage;
@@ -52,7 +54,6 @@ public class RestaurantsService {
 						JSONObject messageBody = (JSONObject) parser.parse(message);
 						String command = (String) messageBody.get("command");
 						Command cmd = null;
-						System.out.println(command);
 						switch (command) {
 						case "CreateRestaurants":
 							cmd = new CreateRestaurant();
@@ -60,12 +61,13 @@ public class RestaurantsService {
 						case "RetrieveRestaurants":
 							cmd = new RetrieveRestaurant();
 							break;
-//                            case "UpdateMessages":   cmd = new UpdateMessage();
-//                                break;
-//                            case "DeleteMessages":   cmd = new DeleteMessage();
-//                                break;
+						case "UpdateRestaurants":
+							cmd = new UpdateRestaurant();
+							break;
+//						case "DeleteRestaurants":
+//							cmd = new DeleteRestaurant();
+//							break;
 						}
-
 						HashMap<String, Object> props = new HashMap<String, Object>();
 						props.put("channel", channel);
 						props.put("properties", properties);
@@ -87,7 +89,7 @@ public class RestaurantsService {
 				}
 			};
 
-			channel.basicConsume(RPC_QUEUE_NAME, true, consumer);
+			channel.basicConsume(RPC_QUEUE_NAME, false, consumer);
 		} catch (IOException | TimeoutException e) {
 			e.printStackTrace();
 		}
