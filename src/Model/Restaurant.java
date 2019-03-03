@@ -43,8 +43,6 @@ public class Restaurant {
 
 	public static String Create(String name, String hotline, String delivery_time, int delivery_fees,
 			String delivery_hours, String description) throws NoSuchAlgorithmException {
-//	        byte[] salt = SHAHashing.getSalt();
-//	        password = SHAHashing.get_SHA_256_SecurePassword(password, salt);
 		String callStatement = "{ call Add_Restaurant( ?, ?, ?, ?, ?, ?) }";
 		JSONObject json = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
@@ -77,11 +75,11 @@ public class Restaurant {
 		json.put("input_array", jsonArray);
 		return json.toString();
 	}
-	
+
 	public static String Update(int id, String name, String hotline, String delivery_time, int delivery_fees,
 			String delivery_hours, String description) throws NoSuchAlgorithmException {
-        String callStatement = "{ ? = call Update_Restaurant_By_Id( ?,?,?,?,?,?,? ) }";
-        JSONObject json = new JSONObject();
+		String callStatement = "{ ? = call Update_Restaurant_By_Id( ?,?,?,?,?,?,? ) }";
+		JSONObject json = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
 		JSONObject inputId = new JSONObject();
 		JSONObject inputName = new JSONObject();
@@ -114,8 +112,8 @@ public class Restaurant {
 		json.put("out_type", Types.INTEGER);
 		json.put("call_statement", callStatement);
 		json.put("input_array", jsonArray);
-        return json.toString();
-    }
+		return json.toString();
+	}
 
 	public static String DeleteById(int id) {
 		String callStatement = "{? = call Delete_Restaurant( ? ) }";

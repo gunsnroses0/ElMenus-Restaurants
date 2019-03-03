@@ -14,13 +14,13 @@ import java.util.HashMap;
 
 public class UpdateRestaurant extends ConcreteCommand {
 
-    public void execute() throws NoSuchAlgorithmException {
-        HashMap<String, Object> props = parameters;
-        this.consume("r4");
-        Channel channel = (Channel) props.get("channel");
-        JSONParser parser = new JSONParser();
-        int id = 0;
-        String name = "";
+	public void execute() throws NoSuchAlgorithmException {
+		HashMap<String, Object> props = parameters;
+		this.consume("r4");
+		Channel channel = (Channel) props.get("channel");
+		JSONParser parser = new JSONParser();
+		int id = 0;
+		String name = "";
 		String hotline = "";
 		String delivery_time = "";
 		int delivery_fees = 0;
@@ -41,25 +41,26 @@ public class UpdateRestaurant extends ConcreteCommand {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-        AMQP.BasicProperties properties = (AMQP.BasicProperties) props.get("properties");
-        AMQP.BasicProperties replyProps = (AMQP.BasicProperties) props.get("replyProps");
-        Envelope envelope = (Envelope) props.get("envelope");
-        String response = Restaurant.Update(id, name, hotline, delivery_time, delivery_fees, delivery_hours, description) + "";
-        sendMessage("database",properties.getCorrelationId(), response);
-    }
+		AMQP.BasicProperties properties = (AMQP.BasicProperties) props.get("properties");
+		AMQP.BasicProperties replyProps = (AMQP.BasicProperties) props.get("replyProps");
+		Envelope envelope = (Envelope) props.get("envelope");
+		String response = Restaurant.Update(id, name, hotline, delivery_time, delivery_fees, delivery_hours,
+				description) + "";
+		sendMessage("database", properties.getCorrelationId(), response);
+	}
 
-    @Override
-    public void handleApi(HashMap<String, Object> service_parameters) {
-        HashMap<String, Object> props = parameters;
-        AMQP.BasicProperties properties = (AMQP.BasicProperties) props.get("properties");
-        AMQP.BasicProperties replyProps = (AMQP.BasicProperties) props.get("replyProps");
-        String serviceBody = service_parameters.get("body").toString();
+	@Override
+	public void handleApi(HashMap<String, Object> service_parameters) {
+		HashMap<String, Object> props = parameters;
+		AMQP.BasicProperties properties = (AMQP.BasicProperties) props.get("properties");
+		AMQP.BasicProperties replyProps = (AMQP.BasicProperties) props.get("replyProps");
+		String serviceBody = service_parameters.get("body").toString();
 
-        Envelope envelope = (Envelope) props.get("envelope");
-        try {
-            channel.basicPublish("", properties.getReplyTo(), replyProps, serviceBody.getBytes("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+		Envelope envelope = (Envelope) props.get("envelope");
+		try {
+			channel.basicPublish("", properties.getReplyTo(), replyProps, serviceBody.getBytes("UTF-8"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

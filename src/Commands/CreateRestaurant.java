@@ -44,8 +44,8 @@ public class CreateRestaurant extends ConcreteCommand {
 		AMQP.BasicProperties replyProps = (AMQP.BasicProperties) props.get("replyProps");
 		Envelope envelope = (Envelope) props.get("envelope");
 		String response = Restaurant.Create(name, hotline, delivery_time, delivery_fees, delivery_hours, description);
-		System.out.print("Response ");
-		System.out.println(response);
+//		System.out.print("Response ");
+//		System.out.println(response);
 		sendMessage("database", properties.getCorrelationId(), response);
 	}
 

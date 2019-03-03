@@ -27,7 +27,7 @@ public abstract class ConcreteCommand extends Command {
 						byte[] body) throws IOException {
 
 					AMQP.BasicProperties myProps = (AMQP.BasicProperties) parameters.get("properties");
-					
+
 					System.out.println("Incoming corrID " + properties.getReplyTo());
 					System.out.println("My corrID " + myProps.getReplyTo());
 
@@ -36,8 +36,6 @@ public abstract class ConcreteCommand extends Command {
 						AMQP.BasicProperties replyProps = new AMQP.BasicProperties.Builder()
 								.correlationId(properties.getCorrelationId()).build();
 						System.out.println("Responding to db-corrID: " + properties.getCorrelationId());
-
-						String response = "";
 
 						try {
 							String message = new String(body, "UTF-8");

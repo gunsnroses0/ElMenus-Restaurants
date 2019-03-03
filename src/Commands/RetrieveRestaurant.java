@@ -13,6 +13,7 @@ import Model.Restaurant;
 //import javax.jws.soap.SOAPBinding;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class RetrieveRestaurant extends ConcreteCommand {
@@ -25,9 +26,10 @@ public class RetrieveRestaurant extends ConcreteCommand {
 		int id = 0;
 		try {
 			JSONObject body = (JSONObject) parser.parse((String) props.get("body"));
-//            System.out.println(body.toString());
-			JSONObject params = (JSONObject) parser.parse(body.get("parameters").toString());
-			id = Integer.parseInt(params.get("id").toString());
+			String url = body.get("uri").toString();
+			url = url.substring(1);
+			String[] parametersArray = url.split("/");
+			id = Integer.parseInt(parametersArray[1]);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (Exception e1) {
@@ -38,7 +40,7 @@ public class RetrieveRestaurant extends ConcreteCommand {
 		AMQP.BasicProperties replyProps = (AMQP.BasicProperties) props.get("replyProps");
 		Envelope envelope = (Envelope) props.get("envelope");
 		String response = Restaurant.getById(id);
-		System.out.println(response);
+//		System.out.println(response);
 		sendMessage("database", properties.getCorrelationId(), response);
 	}
 

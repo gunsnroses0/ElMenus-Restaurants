@@ -8,95 +8,94 @@ import java.util.*;
 
 public abstract class Command implements Runnable {
 
-    protected HashMap<String, Object> parameters;
+	protected HashMap<String, Object> parameters;
 
-    final public void init(HashMap<String, Object> parameters) {
-        this.parameters = parameters;
-    }
+	final public void init(HashMap<String, Object> parameters) {
+		this.parameters = parameters;
+	}
 
-    protected abstract void execute() throws NoSuchAlgorithmException;
+	protected abstract void execute() throws NoSuchAlgorithmException;
 
-    final public void run() {
-        try {
+	final public void run() {
+		try {
 			this.execute();
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
+	}
 
-    public static JSONObject jsonFromArray(ArrayList<HashMap<String, Object>> array, String root) {
-        JSONObject jsonData = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-        Iterator<HashMap<String, Object>> arrayIter = (Iterator<HashMap<String, Object>>) array.iterator();
+	public static JSONObject jsonFromArray(ArrayList<HashMap<String, Object>> array, String root) {
+		JSONObject jsonData = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		Iterator<HashMap<String, Object>> arrayIter = (Iterator<HashMap<String, Object>>) array.iterator();
 
-        while(arrayIter.hasNext()) {
-            HashMap<String, Object> obj = arrayIter.next();
-            jsonArray.add(jsonFromMap(obj));
-        }
-        jsonData.put(root, jsonArray);
-        return jsonData;
-    }
+		while (arrayIter.hasNext()) {
+			HashMap<String, Object> obj = arrayIter.next();
+			jsonArray.add(jsonFromMap(obj));
+		}
+		jsonData.put(root, jsonArray);
+		return jsonData;
+	}
 
-    public static JSONObject jsonFromMap(HashMap<String, Object> map) {
-        JSONObject jsonData = new JSONObject();
+	public static JSONObject jsonFromMap(HashMap<String, Object> map) {
+		JSONObject jsonData = new JSONObject();
 
-        for (String key : map.keySet()) {
-            Object value = map.get(key);
-            if (value instanceof Map<?, ?>) {
-                value = jsonFromMap((HashMap<String, Object>) value);
-            }
-            jsonData.put(key, value);
-        }
+		for (String key : map.keySet()) {
+			Object value = map.get(key);
+			if (value instanceof Map<?, ?>) {
+				value = jsonFromMap((HashMap<String, Object>) value);
+			}
+			jsonData.put(key, value);
+		}
 
-        return jsonData;
-    }
+		return jsonData;
+	}
 
-    public static HashMap<String, Object> jsonToMap(JSONObject json) {
-        HashMap<String, Object> retMap = new HashMap<String, Object>();
+	public static HashMap<String, Object> jsonToMap(JSONObject json) {
+		HashMap<String, Object> retMap = new HashMap<String, Object>();
 
-        retMap = toMap(json);
+		retMap = toMap(json);
 
-        return retMap;
-    }
+		return retMap;
+	}
 
-    public static HashMap<String, Object> toMap(JSONObject object) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+	public static HashMap<String, Object> toMap(JSONObject object) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
 
-        Iterator<String> keysItr = object.keySet().iterator();
+		Iterator<String> keysItr = object.keySet().iterator();
 
-        while(keysItr.hasNext()) {
+		while (keysItr.hasNext()) {
 
-            String key = keysItr.next();
+			String key = keysItr.next();
 
+			Object value = object.get(key);
 
-            Object value = object.get(key);
+			if (value instanceof JSONArray) {
+				value = toList((JSONArray) value);
+			}
 
-            if(value instanceof JSONArray) {
-                value = toList((JSONArray) value);
-            }
+			else if (value instanceof JSONObject) {
+				value = toMap((JSONObject) value);
+			}
+			map.put(key, value);
+		}
+		return map;
+	}
 
-            else if(value instanceof JSONObject) {
-                value = toMap((JSONObject) value);
-            }
-            map.put(key, value);
-        }
-        return map;
-    }
+	public static List<Object> toList(JSONArray array) {
+		List<Object> list = new ArrayList<Object>();
+		for (int i = 0; i < array.size(); i++) {
+			Object value = array.get(i);
+			if (value instanceof JSONArray) {
+				value = toList((JSONArray) value);
+			}
 
-    public static List<Object> toList(JSONArray array) {
-        List<Object> list = new ArrayList<Object>();
-        for(int i = 0; i < array.size(); i++) {
-            Object value = array.get(i);
-            if(value instanceof JSONArray) {
-                value = toList((JSONArray) value);
-            }
-
-            else if(value instanceof JSONObject) {
-                value = toMap((JSONObject) value);
-            }
-            list.add(value);
-        }
-        return list;
-    }
+			else if (value instanceof JSONObject) {
+				value = toMap((JSONObject) value);
+			}
+			list.add(value);
+		}
+		return list;
+	}
 }

@@ -30,7 +30,7 @@ $BODY$
 DECLARE
 ref refcursor;
 BEGIN
-OPEN ref FOR SELECT name FROM Restaurants WHERE id = _id;
+OPEN ref FOR SELECT * FROM Restaurants WHERE id = _id;
 RETURN ref;
 END;
 $BODY$
@@ -52,7 +52,7 @@ END;
 $BODY$
 LANGUAGE 'plpgsql' VOLATILE;
 
---DELETE--
+--DELETE Restaurant--
 CREATE OR REPLACE FUNCTION Delete_Restaurant (_id INT = NULL)
 RETURNS integer AS
 $BODY$
