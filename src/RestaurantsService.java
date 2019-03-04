@@ -1,6 +1,7 @@
 import Commands.Command;
+
+
 import Commands.CreateRestaurant;
-import Commands.DeleteRestaurant;
 import Commands.RetrieveRestaurant;
 import Commands.UpdateRestaurant;
 
@@ -64,9 +65,6 @@ public class RestaurantsService {
 						case "UpdateRestaurants":
 							cmd = new UpdateRestaurant();
 							break;
-//						case "DeleteRestaurants":
-//							cmd = new DeleteRestaurant();
-//							break;
 						}
 						HashMap<String, Object> props = new HashMap<String, Object>();
 						props.put("channel", channel);

@@ -1,10 +1,11 @@
 --ADD Restaurant--
-CREATE OR REPLACE FUNCTION Add_Restaurant (_name varchar(100) = NULL, _hotline VARCHAR (100) = NULL, _delivery_time VARCHAR (100) = NULL, _delivery_fees INT = NULL, _delivery_hours VARCHAR(200) = NULL, _description text = NULL)
+CREATE OR REPLACE FUNCTION Add_Restaurant (_username VARCHAR = NULL, _name varchar(100) = NULL, _hotline VARCHAR (100) = NULL, _delivery_time VARCHAR (100) = NULL, _delivery_fees INT = NULL, _delivery_hours VARCHAR(200) = NULL, _description text = NULL)
 RETURNS VOID
 AS
 $BODY$
 BEGIN
 INSERT INTO Restaurants(
+  username,
   name,
   hotline,
   delivery_time,
@@ -12,6 +13,7 @@ INSERT INTO Restaurants(
   delivery_hours,
   description
 )values(
+  _username,
   _name,
   _hotline,
   _delivery_time,
