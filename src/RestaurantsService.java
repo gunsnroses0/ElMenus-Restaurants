@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
 
 public class RestaurantsService {
-	private static final String RPC_QUEUE_NAME = "restaurants-request";
+	private static final String RPC_QUEUE_NAME = "restaurant-request";
 
 	public static void main(String[] argv) {
 
@@ -56,13 +56,13 @@ public class RestaurantsService {
 						String command = (String) messageBody.get("command");
 						Command cmd = null;
 						switch (command) {
-						case "CreateRestaurants":
+						case "CreateRestaurant":
 							cmd = new CreateRestaurant();
 							break;
-						case "RetrieveRestaurants":
+						case "RetrieveRestaurant":
 							cmd = new RetrieveRestaurant();
 							break;
-						case "UpdateRestaurants":
+						case "UpdateRestaurant":
 							cmd = new UpdateRestaurant();
 							break;
 						}

@@ -41,6 +41,21 @@ public class Restaurant {
 		return json.toString();
 	}
 
+	public static String getByUsername(String username) {
+		String callStatement = "{? = call Get_Restaurant_By_Username( ? ) }";
+		JSONObject json = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		JSONObject inputObject = new JSONObject();
+		inputObject.put("type", Types.VARCHAR);
+		inputObject.put("value", username);
+		jsonArray.add(inputObject);
+		json.put("call_statement", callStatement);
+		json.put("out_type", Types.OTHER);
+		json.put("input_array", jsonArray);
+
+		return json.toString();
+	}
+
 	public static String Create(String username, String name, String hotline, String delivery_time, int delivery_fees,
 			String delivery_hours, String description) throws NoSuchAlgorithmException {
 		String callStatement = "{ call Add_Restaurant( ?, ?, ?, ?, ?, ?, ?) }";
@@ -80,20 +95,20 @@ public class Restaurant {
 		return json.toString();
 	}
 
-	public static String Update(int id, String name, String hotline, String delivery_time, int delivery_fees,
+	public static String Update(String username, String name, String hotline, String delivery_time, int delivery_fees,
 			String delivery_hours, String description) throws NoSuchAlgorithmException {
-		String callStatement = "{ ? = call Update_Restaurant_By_Id( ?,?,?,?,?,?,? ) }";
+		String callStatement = "{ ? = call Update_Restaurant_By_Username( ?,?,?,?,?,?,? ) }";
 		JSONObject json = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
-		JSONObject inputId = new JSONObject();
+		JSONObject inputUsername = new JSONObject();
 		JSONObject inputName = new JSONObject();
 		JSONObject inputHotline = new JSONObject();
 		JSONObject inputDeliveryTime = new JSONObject();
 		JSONObject inputDeliveryFees = new JSONObject();
 		JSONObject inputDeliveryHours = new JSONObject();
 		JSONObject inputDescription = new JSONObject();
-		inputId.put("type", Types.INTEGER);
-		inputId.put("value", id);
+		inputUsername.put("type", Types.VARCHAR);
+		inputUsername.put("value", username);
 		inputName.put("type", Types.VARCHAR);
 		inputName.put("value", name);
 		inputHotline.put("type", Types.VARCHAR);
@@ -106,7 +121,7 @@ public class Restaurant {
 		inputDeliveryHours.put("value", delivery_hours);
 		inputDescription.put("type", Types.VARCHAR);
 		inputDescription.put("value", description);
-		jsonArray.add(inputId);
+		jsonArray.add(inputUsername);
 		jsonArray.add(inputName);
 		jsonArray.add(inputHotline);
 		jsonArray.add(inputDeliveryTime);
