@@ -27,27 +27,25 @@ import java.util.HashMap;
 public class RetrieveRestaurant extends ConcreteCommand {
 
 	public void execute() throws NoSuchAlgorithmException {
-		this.consume("r1");
+		this.consume("r5");
 		HashMap<String, Object> props = parameters;
 		Channel channel = (Channel) props.get("channel");
 		JSONParser parser = new JSONParser();
-//		int id = 0;
-		String username = "";
+		int id = 0;
+//		String username = "";
 		try {
 			JSONObject body = (JSONObject) parser.parse((String) props.get("body"));
-//			String url = body.get("uri").toString();
-//			url = url.substring(1);
-//			String[] parametersArray = url.split("/");
-//			id = Integer.parseInt(parametersArray[1]);
 
 			// Get jwt token
-			JSONObject headers = (JSONObject) parser.parse(body.get("headers").toString());
-			System.out.println(headers.toString());
-			String jwt = headers.get("jwt").toString();
-			System.out.println(jwt);
-			HashMap<String, String> credentials = ParseJWT(jwt);
+//			JSONObject headers = (JSONObject) parser.parse(body.get("headers").toString());
+//			System.out.println(headers.toString());
+//			String jwt = headers.get("jwt").toString();
+//			System.out.println(jwt);
+//			HashMap<String, String> credentials = ParseJWT(jwt);
 
-			username = credentials.get("username");
+//			username = credentials.get("username");
+			String strId = ((String) body.get("uri")).split("/")[((String) body.get("uri")).split("/").length - 1];
+			id = Integer.parseInt(strId);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (Exception e1) {
@@ -57,8 +55,7 @@ public class RetrieveRestaurant extends ConcreteCommand {
 		AMQP.BasicProperties properties = (AMQP.BasicProperties) props.get("properties");
 		AMQP.BasicProperties replyProps = (AMQP.BasicProperties) props.get("replyProps");
 		Envelope envelope = (Envelope) props.get("envelope");
-		String response = Restaurant.getByUsername(username);
-//		String response = Restaurant.getById(id);
+		String response = Restaurant.getById(id);
 		sendMessage("database", properties.getCorrelationId(), response);
 	}
 

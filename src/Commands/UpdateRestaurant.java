@@ -34,29 +34,31 @@ public class UpdateRestaurant extends ConcreteCommand {
 		String hotline = "";
 		String delivery_time = "";
 		int delivery_fees = 0;
+		int id = 0;
 		String delivery_hours = "";
 		String description = "";
 		try {
+			// Body
 			JSONObject body = (JSONObject) parser.parse((String) props.get("body"));
-//	        System.out.println("The BODY is: " + body.toString());
-			JSONObject params = (JSONObject) parser.parse(body.get("body").toString());
-//			System.out.println("The params are: " + body.toString());
+			System.out.println("Body " + body);
 
-			// Get jwt token
+			// Get JWT Token
 			JSONObject headers = (JSONObject) parser.parse(body.get("headers").toString());
-			System.out.println(headers.toString());
 			String jwt = headers.get("jwt").toString();
-			System.out.println(jwt);
 			HashMap<String, String> credentials = ParseJWT(jwt);
-
 			username = credentials.get("username");
-//			id = Integer.parseInt(params.get("id").toString());
-			name = params.get("name").toString();
-			hotline = params.get("hotline").toString();
-			delivery_time = params.get("delivery_time").toString();
-			delivery_fees = Integer.parseInt(params.get("delivery_fees").toString());
-			delivery_hours = params.get("delivery_hours").toString();
-			description = params.get("description").toString();
+
+			String strId = ((String) body.get("uri")).split("/")[((String) body.get("uri")).split("/").length - 1];
+			id = Integer.parseInt(strId);
+
+			// FORM
+			JSONObject form = (JSONObject) body.get("form");
+			name = form.get("name").toString();
+			hotline = form.get("hotline").toString();
+			delivery_time = form.get("delivery_time").toString();
+			delivery_fees = Integer.parseInt(form.get("delivery_fees").toString());
+			delivery_hours = form.get("delivery_hours").toString();
+			description = form.get("description").toString();
 		} catch (ParseException | ExpiredJwtException | UnsupportedJwtException | MalformedJwtException
 				| SignatureException | IllegalArgumentException | UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -64,8 +66,8 @@ public class UpdateRestaurant extends ConcreteCommand {
 		AMQP.BasicProperties properties = (AMQP.BasicProperties) props.get("properties");
 		AMQP.BasicProperties replyProps = (AMQP.BasicProperties) props.get("replyProps");
 		Envelope envelope = (Envelope) props.get("envelope");
-		String response = Restaurant.Update(username, name, hotline, delivery_time, delivery_fees, delivery_hours,
-				description) + "";
+		String response = Restaurant.Update(id, username, name, hotline, delivery_time, delivery_fees, delivery_hours,
+				description);
 		sendMessage("database", properties.getCorrelationId(), response);
 	}
 

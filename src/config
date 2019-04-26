@@ -1,0 +1,5 @@
+POST,/restaurant/,CreateRestaurant
+POST,/restaurant/upload/id,UploadImage
+GET,/restaurant/,RetrieveRestaurants
+GET,/restaurant/id,RetrieveRestaurant
+PATCH,/restaurant/id,UpdateRestaurant

@@ -7,5 +7,6 @@
 	delivery_time VARCHAR (100),
 	delivery_fees INT,
 	delivery_hours VARCHAR(200),
-	description text
+	description text,
+	picture VARCHAR (100)
 	);

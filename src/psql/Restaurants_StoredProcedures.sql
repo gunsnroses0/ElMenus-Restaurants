@@ -1,5 +1,5 @@
 --ADD Restaurant--
-CREATE OR REPLACE FUNCTION Add_Restaurant (_username VARCHAR = NULL, _name varchar(100) = NULL, _hotline VARCHAR (100) = NULL, _delivery_time VARCHAR (100) = NULL, _delivery_fees INT = NULL, _delivery_hours VARCHAR(200) = NULL, _description text = NULL)
+CREATE OR REPLACE FUNCTION Add_Restaurant (_username VARCHAR = NULL, _name varchar(100) = NULL, _hotline VARCHAR (100) = NULL, _delivery_time VARCHAR (100) = NULL, _delivery_fees INT = NULL, _delivery_hours VARCHAR(200) = NULL, _description text = NULL, _picture VARCHAR(100) = NULL)
 RETURNS VOID
 AS
 $BODY$
@@ -11,7 +11,8 @@ INSERT INTO Restaurants(
   delivery_time,
   delivery_fees,
   delivery_hours,
-  description
+  description,
+  picture
 )values(
   _username,
   _name,
@@ -19,7 +20,8 @@ INSERT INTO Restaurants(
   _delivery_time,
   _delivery_fees,
   _delivery_hours,
-  _description
+  _description,
+  _picture
 );
 END;
 $BODY$
@@ -68,14 +70,14 @@ $BODY$
 LANGUAGE 'plpgsql' VOLATILE;
 
 --UPDATE Restaurant By Username--
-CREATE OR REPLACE FUNCTION Update_Restaurant_By_Username (_username VARCHAR = NULL, _name varchar(100) = NULL, _hotline VARCHAR (100) = NULL, _delivery_time VARCHAR (100) = NULL, _delivery_fees INT = NULL, _delivery_hours VARCHAR(200) = NULL, _description text = NULL)
+CREATE OR REPLACE FUNCTION Update_Restaurant_By_Username (_username VARCHAR = NULL, _name varchar(100) = NULL, _hotline VARCHAR (100) = NULL, _delivery_time VARCHAR (100) = NULL, _delivery_fees INT = NULL, _delivery_hours VARCHAR(200) = NULL, _description text = NULL, _picture VARCHAR(100) = NULL)
 RETURNS integer AS
 $BODY$
 DECLARE
   a_count integer;
 BEGIN
 UPDATE Restaurants
-SET name = _name, hotline = _hotline, delivery_time = _delivery_time, delivery_fees = _delivery_fees, delivery_hours = _delivery_hours, description = _description
+SET name = _name, hotline = _hotline, delivery_time = _delivery_time, delivery_fees = _delivery_fees, delivery_hours = _delivery_hours, description = _description, picture = _picture
 WHERE username = _username;
 GET DIAGNOSTICS a_count = ROW_COUNT;
 RETURN a_count;

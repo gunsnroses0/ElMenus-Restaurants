@@ -30,49 +30,39 @@ import org.json.simple.parser.ParseException;
 //import java.security.NoSuchAlgorithmException;
 //import java.util.HashMap;
 
-public class CreateRestaurant extends ConcreteCommand {
+public class UploadImage extends ConcreteCommand {
 	public void execute() throws NoSuchAlgorithmException {
-		this.consume("r3");
+		this.consume("r2");
 		HashMap<String, Object> props = parameters;
 		Channel channel = (Channel) props.get("channel");
 		JSONParser parser = new JSONParser();
-		String username = "";
-		String name = "";
-		String hotline = "";
-		String delivery_time = "";
-		int delivery_fees = 0;
-		String delivery_hours = "";
-		String description = "";
-//		String picture = "";
+		int id = 0;
+		String image = "";
+		String type = "";
 		try {
 			// Body
 			JSONObject body = (JSONObject) parser.parse((String) props.get("body"));
 			System.out.println("Body " + body);
 
-			// Get JWT Token
-			JSONObject headers = (JSONObject) parser.parse(body.get("headers").toString());
-			String jwt = headers.get("jwt").toString();
-			HashMap<String, String> credentials = ParseJWT(jwt);
-			username = credentials.get("username");
-
 			// FORM
 			JSONObject form = (JSONObject) body.get("form");
-			name = form.get("name").toString();
-			hotline = form.get("hotline").toString();
-			delivery_time = form.get("delivery_time").toString();
-			delivery_fees = Integer.parseInt(form.get("delivery_fees").toString());
-			delivery_hours = form.get("delivery_hours").toString();
-			description = form.get("description").toString();
-//			picture = form.containsKey("media") ? form.get("media").toString() : "";
+			System.out.println(form.toJSONString());
+			System.out.println(((String) body.get("uri")).split("/")[((String) body.get("uri")).split("/").length - 1]);
+
+			String strId = ((String) body.get("uri")).split("/")[((String) body.get("uri")).split("/").length - 1];
+			id =  Integer.parseInt(strId);
+			image = form.get("media").toString();
+			System.out.println(form.get("media"));
+			type = form.get("type").toString();
+			System.out.println(type);
 		} catch (ParseException | ExpiredJwtException | UnsupportedJwtException | MalformedJwtException
-				| SignatureException | IllegalArgumentException | UnsupportedEncodingException e) {
+				| SignatureException | IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 		AMQP.BasicProperties properties = (AMQP.BasicProperties) props.get("properties");
 		AMQP.BasicProperties replyProps = (AMQP.BasicProperties) props.get("replyProps");
 		Envelope envelope = (Envelope) props.get("envelope");
-		String response = Restaurant.Create(username, name, hotline, delivery_time, delivery_fees, delivery_hours,
-				description);
+		String response = Restaurant.Upload(id, image, type);
 		sendMessage("database", properties.getCorrelationId(), response);
 	}
 
@@ -89,16 +79,6 @@ public class CreateRestaurant extends ConcreteCommand {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private HashMap<String, String> ParseJWT(String jwt) throws ExpiredJwtException, UnsupportedJwtException,
-			MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException {
-		HashMap<String, String> credentials = new HashMap<String, String>();
-		String secret = "secret";
-		Jws<Claims> claims = Jwts.parser().setSigningKey(secret.getBytes("UTF-8")).parseClaimsJws(jwt);
-		credentials.put("username", (String) claims.getBody().get("username"));
-		credentials.put("user_type", (String) claims.getBody().get("user_type"));
-		return credentials;
 	}
 
 }
