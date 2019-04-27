@@ -22,7 +22,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>RestaurantsService</mainClass>
+                            <mainClass>Service.RestaurantsService</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
