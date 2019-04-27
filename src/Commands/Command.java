@@ -3,6 +3,7 @@ package Commands;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -14,17 +15,18 @@ public abstract class Command implements Runnable {
 		this.parameters = parameters;
 	}
 
-	protected abstract void execute() throws NoSuchAlgorithmException;
+	protected abstract void execute() throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchAlgorithmException;
 
-	final public void run() {
+	@Override
+	public void run() {
 		try {
 			this.execute();
-		} catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException |NoSuchMethodException | SecurityException | ClassNotFoundException | IllegalAccessException
+				| IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
 	public static JSONObject jsonFromArray(ArrayList<HashMap<String, Object>> array, String root) {
 		JSONObject jsonData = new JSONObject();
 		JSONArray jsonArray = new JSONArray();

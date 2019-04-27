@@ -1,9 +1,11 @@
+package Service;
 import Commands.Command;
 
 import Commands.CreateRestaurant;
 import Commands.RetrieveRestaurants;
 import Commands.UpdateRestaurant;
 
+import com.mongodb.client.MongoDatabase;
 //import Commands.delete.DeleteMessage;
 //import Commands.get.GetMessage;
 //import Commands.get.GetMessages;
@@ -27,10 +29,37 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
 
 public class RestaurantsService {
-	private static final String RPC_QUEUE_NAME = "restaurant-request";
-	public static HashMap<String, String> config;
+	private static String RPC_QUEUE_NAME = "restaurant-request";
+	
+	public static String getRPC_QUEUE_NAME() {
+		return RPC_QUEUE_NAME;
+	}
 
-	public static void main(String[] argv) throws IOException {
+	public static void setRPC_QUEUE_NAME(String rPC_QUEUE_NAME) {
+		System.out.println("RENAMING");
+		RPC_QUEUE_NAME = rPC_QUEUE_NAME;
+	}
+
+	public static  MongoDatabase database;
+	public static HashMap<String, String> config;
+	static int threadPoolCount=4;
+	public static int getThreadPoolCount() {
+		return threadPoolCount;
+	}
+	public static void setThreadPoolCount(int threadPoolCount) {
+		RestaurantsService.threadPoolCount = threadPoolCount;
+	}
+	public static void main(String[] argv) {
+		run();
+		ServiceController.run();
+	}
+	public static void run() {
+		try {
+			updateHashMap();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		// initialize thread pool of fixed size
 		final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
@@ -39,7 +68,6 @@ public class RestaurantsService {
 		String host = System.getenv("RABBIT_MQ_SERVICE_HOST");
 		factory.setHost(host);
 		Connection connection = null;
-		updateHashMap();
 		try {
 			connection = factory.newConnection();
 			final Channel channel = connection.createChannel();
